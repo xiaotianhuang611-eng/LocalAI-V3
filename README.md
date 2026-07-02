@@ -1,526 +1,311 @@
-# LocalAI_V3
+﻿# LocalAI_V3
 
-## A Local-First Privacy-Preserving Personalised AI Tutor
+**A local-first, privacy-preserving personalised AI tutor for students.**
 
-**LocalAI_V3** is a local-first, privacy-preserving personalised AI tutor designed for students, English learners, and users who need private AI-assisted learning on their own device.
+LocalAI_V3 is a Windows desktop AI assistant designed for student learning, spoken English practice, document-based RAG, local memory, web-crawled knowledge ingestion, image understanding, and voice interaction.
 
-It supports real-time voice interaction, English speaking practice, mathematical learning, document-based RAG, local memory, image understanding, web knowledge ingestion, and local GPU inference.
-
-> **Speak · Learn · Remember · Grow**
+The project is designed to run locally on the user's own computer, reducing dependence on cloud APIs and keeping personal learning data private.
 
 ---
 
-## 1. Project Overview
+## Key Features
 
-LocalAI_V3 is not a cloud chatbot. It is a desktop AI tutor that runs the main AI pipeline locally on the user's own computer.
-
-The system integrates multiple local AI modules:
-
-- **VAD** for automatic speech start/stop detection
-- **faster-whisper ASR** for speech recognition
-- **Gemma GGUF** for local language reasoning
-- **XTTS** for voice output and voice cloning
-- **Qwen-VL** for image understanding
-- **Local Memory** for personalised long-term context
-- **Local RAG** for document-grounded answering
-- **Web Knowledge Ingestion** for adding public web content into the local RAG knowledge base
-- **PySide6 Desktop UI** for user interaction
-
-The project is designed as a local AI tutor for spoken English practice, presentation rehearsal, academic Q&A, mathematical learning, personalised study support, and local document-based question answering.
+- Local GGUF LLM chat
+- Spoken English practice
+- Voice input with ASR
+- Voice output with XTTS
+- Local RAG over user knowledge files
+- Web knowledge ingestion into local RAG
+- Local memory system
+- Image understanding with Qwen-VL
+- Streaming live response mode
+- Kawaii-style PySide6 desktop UI
+- Windows easy-start scripts
 
 ---
 
-## 2. Key Features
+## Project Positioning
 
-### Real-Time Voice Chat
+LocalAI_V3 is not just a chatbot. It is designed as a local AI tutor that can:
 
-LocalAI_V3 supports live voice interaction using:
+- listen to students
+- answer questions
+- use personal study materials
+- remember learning context locally
+- support spoken practice
+- analyse images and screenshots
+- ingest web knowledge into a local knowledge base
 
-```text
-VAD -> ASR -> Gemma -> XTTS
-```
-
-The system listens to the user, transcribes speech into text, generates a response locally, and speaks back using XTTS.
-
-### Streaming Live Mode
-
-The latest version supports sentence-level streaming speech playback.
-
-Instead of waiting for the full LLM response before speaking, the system can:
-
-```text
-Generate response -> detect complete sentence -> send to XTTS -> speak sentence by sentence
-```
-
-This reduces perceived latency and makes the interaction feel closer to a real AI tutor.
-
-### English Speaking Coach
-
-The system can be used as a speaking practice partner for students and English learners. It can support daily conversation practice, presentation practice, classroom discussion practice, natural expression correction, and personalised feedback.
-
-### Math Teacher Mode
-
-The project is designed to support mathematical learning through step-by-step explanation, formula-based reasoning, final answer generation, scoring, correction, and personalised advice.
-
-### Local RAG
-
-Users can place their own documents into the local knowledge folder and build a RAG index:
-
-```text
-data/knowledge/
-```
-
-The assistant can then answer questions based on the user's own study materials, project notes, or documents.
-
-### Web Knowledge Ingestion
-
-The system includes a web knowledge module that can search public web pages, crawl a direct URL, extract readable content, save cleaned text as local Markdown files, and add the content into the local RAG knowledge base.
-
-### Local Memory
-
-The memory module stores stable facts, learning context, project information, and user preferences locally.
-
-### Image Understanding
-
-The system can use Qwen-VL to analyse images. To manage limited GPU memory, the runtime safely unloads and reloads models when switching into image mode.
+The long-term goal is to explore how privacy-preserving local AI systems can support personalised learning.
 
 ---
 
-## 3. Target Users
+## Quick Start on Windows
 
-LocalAI_V3 is designed for:
+### 1. Clone the repository
 
-- international students
-- university students
-- high school students
-- English learners
-- students preparing presentations or viva-style explanations
-- users who want private AI tutoring on their own device
-- users with NVIDIA RTX GPUs who want local AI inference
-
----
-
-## 4. Why Local-First?
-
-Many AI assistants rely on cloud APIs. LocalAI_V3 takes a different approach.
-
-The main assistant pipeline runs locally, which means:
-
-- voice data stays on the user's device
-- documents stay on the user's device
-- memory stays on the user's device
-- RAG knowledge files remain local
-- the user controls the models and data
-- no cloud API is required for the core assistant workflow
-
-This makes the system suitable for privacy-sensitive learning and personal study workflows.
-
----
-
-## 5. System Architecture
-
-High-level architecture:
-
-```text
-User
- ↓
-PySide6 Desktop UI
- ↓
-ModelRuntime
- ↓
-Core AI Modules
- ├── Energy VAD
- ├── faster-whisper ASR
- ├── Gemma local LLM
- ├── XTTS voice output
- ├── Qwen-VL image understanding
- ├── Local Memory
- ├── Local RAG
- └── Web Knowledge Ingestion
+```powershell
+git clone https://github.com/xiaotianhuang611-eng/LocalAI-V3.git
+cd LocalAI-V3
 ```
 
-Text interaction:
+### 2. Run setup
 
-```text
-User text
- ↓
-PromptBuilder
- ↓
-Gemma GGUF via llama-cpp-python
- ↓
-English response
- ↓
-XTTS voice output
+```powershell
+powershell -ExecutionPolicy Bypass -File .\setup_windows.ps1
 ```
 
-Voice interaction:
+This will:
 
-```text
-Microphone
- ↓
-VAD auto-stop recording
- ↓
-faster-whisper ASR
- ↓
-Gemma response generation
- ↓
-XTTS speech synthesis
-```
+- create a Python virtual environment
+- install dependencies from `requirements.txt`
+- run a system check
+- report missing models or runtime files
 
-Streaming Live Mode:
+### 3. Add model files
 
-```text
-ASR text
- ↓
-Gemma streaming generation
- ↓
-SentenceBuffer
- ↓
-TTSQueue
- ↓
-XTTS sentence-level playback
-```
+Model files are not included in this repository.
 
-Web-Augmented RAG:
-
-```text
-Search query / URL
- ↓
-Web crawler
- ↓
-Cleaned Markdown document
- ↓
-data/knowledge/web_crawled/
- ↓
-RAG index rebuild
- ↓
-Gemma answers with retrieved context
-```
-
----
-
-## 6. Hardware Requirements
-
-### Minimum Target
-
-```text
-NVIDIA RTX 2060 6GB VRAM or above
-```
-
-This supports reduced configuration and core local inference.
-
-### Recommended
-
-```text
-RTX 3060 12GB
-RTX 4060 8GB
-RTX 5060 8GB
-or higher
-```
-
-### Best Experience
-
-```text
-12GB VRAM or higher
-```
-
-RTX 3050 4GB may run a lightweight configuration, but full multimodal use is not recommended on 4GB VRAM.
-
----
-
-## 7. Software Requirements
-
-Recommended environment:
-
-```text
-Windows 10 / Windows 11
-Python virtual environment
-NVIDIA GPU
-CUDA-compatible PyTorch
-llama-cpp-python with CUDA support
-PySide6
-faster-whisper
-Coqui TTS / XTTS
-```
-
----
-
-## 8. Project Structure
-
-```text
-LocalAI_V3/
-  main.py
-  config.py
-  README.md
-  LICENSE
-  requirements.txt
-
-  core/
-    model_runtime.py
-    gemma_chat.py
-    prompt_builder.py
-    xtts_fast.py
-    asr.py
-    vad_recorder.py
-    qwen_vision.py
-    memory_store.py
-    rag_store.py
-    web_knowledge.py
-    sentence_buffer.py
-    tts_queue.py
-    persona.py
-    emotion_engine.py
-
-  ui/
-    main_window.py
-
-  tools/
-    build_rag_index.py
-    test_rag_search.py
-    web_search_to_rag.py
-    benchmark_v4_2.py
-
-  data/
-    knowledge/
-      README.md
-      sample_project_note.md
-
-  docs/
-    index.html
-    style.css
-```
-
----
-
-## 9. Model Files
-
-Model weights are **not included** in this repository.
-
-Do not upload:
-
-```text
-models/
-*.gguf
-*.safetensors
-*.bin
-*.pt
-*.pth
-*.onnx
-```
-
-Users should download compatible models separately and place them in the required local folders.
-
-Example expected model structure:
+Place them like this:
 
 ```text
 models/
   google_gemma-4-E4B-it-Q5_K_M.gguf
 
-  qwen_vl/
-    Qwen2.5-VL-3B-Instruct-Q4_K_M.gguf
-    mmproj-Qwen2.5-VL-3B-Instruct-f16.gguf
+models/qwen_vl/
+  Qwen2.5-VL-3B-Instruct-Q4_K_M.gguf
+  mmproj-Qwen2.5-VL-3B-Instruct-f16.gguf
 ```
 
-Model licenses must be checked and followed separately.
-
----
-
-## 10. Quick Start
-
-Run:
-
-```powershell
-cd LocalAI_V3
-.\.venv\Scripts\python.exe main.py
-```
-
-If running from the original project path:
-
-```powershell
-cd C:\Users\111\Desktop\LocalAI_V3
-.\.venv\Scripts\python.exe main.py
-```
-
----
-
-## 11. Build the RAG Index
-
-Place local study materials or project notes into:
+See:
 
 ```text
-data/knowledge/
+docs/MODEL_SETUP.md
 ```
 
-Then run:
+### 4. Add voice reference file
+
+For XTTS voice output, add:
+
+```text
+data/reference.wav
+```
+
+Recommended:
+
+- WAV format
+- 7 to 12 seconds
+- one speaker
+- clear voice
+- low background noise
+
+### 5. Build RAG index
 
 ```powershell
 .\.venv\Scripts\python.exe .\tools\build_rag_index.py
 ```
 
-After building the index, enable the **RAG** checkbox in the UI.
+### 6. Start the app
+
+```powershell
+.\run_localai.bat
+```
+
+Alternative:
+
+```powershell
+.\.venv\Scripts\python.exe .\main.py
+```
 
 ---
 
-## 12. Web Knowledge Ingestion
+## System Check
 
-### Search and add web content into RAG
-
-```powershell
-.\.venv\Scripts\python.exe .\tools\web_search_to_rag.py --query "local AI speech assistant RAG" --max-results 5 --rebuild
-```
-
-### Crawl a direct URL
+To check whether your environment is ready:
 
 ```powershell
-.\.venv\Scripts\python.exe .\tools\web_search_to_rag.py --url "https://example.com/article" --rebuild
+.\.venv\Scripts\python.exe .\tools\check_system.py
 ```
 
-Crawled web pages are saved to:
+The system check reports:
 
-```text
-data/knowledge/web_crawled/
-```
-
-The crawler is intended only for publicly accessible pages. Users should respect website terms, copyright restrictions, robots.txt, and rate limits.
+- Python version
+- project files
+- required directories
+- model files
+- voice reference file
+- RAG index
+- Python dependencies
+- CUDA / GPU status
 
 ---
 
-## 13. Privacy Notice
+## Hardware Requirements
 
-The repository should not include private user data.
+### Recommended
 
-Do not upload:
+- Windows 10 / Windows 11
+- NVIDIA RTX GPU with around 8GB VRAM or above
+- Python 3.10 or 3.11
+- 16GB RAM or above
+- 20GB free disk space or above
+
+### Minimum
+
+- NVIDIA RTX GPU with around 6GB VRAM
+- Lite settings may be required
+- Vision and long voice generation may be limited
+
+### Not Recommended
+
+- CPU-only machines for the full voice assistant pipeline
+- Non-NVIDIA GPU systems
+- Very low VRAM laptops
+
+---
+
+## Repository Structure
 
 ```text
-data/reference.wav
-data/output.wav
-data/temp/
+LocalAI_V3/
+  main.py
+  config.py
+  requirements.txt
+  setup_windows.ps1
+  run_localai.bat
+  QUICKSTART.md
+
+  core/
+    gemma_chat.py
+    qwen_vision.py
+    model_runtime.py
+    xtts_fast.py
+    asr.py
+    rag_store.py
+    memory_store.py
+    web_knowledge.py
+    sentence_buffer.py
+    tts_queue.py
+
+  ui/
+    main_window.py
+
+  tools/
+    check_system.py
+    build_rag_index.py
+    web_search_to_rag.py
+
+  data/
+    knowledge/
+
+  docs/
+    MODEL_SETUP.md
+```
+
+---
+
+## What Is Not Included
+
+This repository intentionally excludes large, private, or generated files:
+
+```text
+models/
+.venv/
 data/memory/
 data/rag/
-private documents
-model weights
+data/temp/
+data/reference.wav
+*.gguf
+*.wav
 ```
 
-This project is designed to keep user data local.
+Reasons:
+
+- model files are too large for GitHub
+- model licenses may differ from the project license
+- personal memory should remain private
+- voice samples should remain private
+- RAG indexes are generated locally
 
 ---
 
-## 14. GitHub Pages Website
+## Documentation
 
-A static project landing page can be placed in:
-
-```text
-docs/
-  index.html
-  style.css
-```
-
-GitHub Pages can be enabled from:
+Start here:
 
 ```text
-Repository Settings -> Pages -> Deploy from branch -> main -> /docs
+QUICKSTART.md
 ```
 
-The website introduces the project and links users to GitHub for download.
+Model setup:
+
+```text
+docs/MODEL_SETUP.md
+```
+
+System check:
+
+```powershell
+.\.venv\Scripts\python.exe .\tools\check_system.py
+```
 
 ---
 
-## 15. Current Development Status
+## Development Status
 
-LocalAI_V3 is currently a functional local AI software prototype.
-
-It includes:
-
-- desktop UI
-- local LLM inference
-- voice input and output
-- streaming live mode
-- local RAG
-- local memory
-- image understanding
-- web knowledge ingestion
-- benchmark tooling
-- open-source release preparation
-
-It is best described as:
+Current version direction:
 
 ```text
-Research Prototype
-Engineering Prototype
-Local Personalised AI Tutor
+V4.9 Easy Start Pack
 ```
 
-It is not yet a production-level commercial SaaS platform.
+Completed:
 
----
+- GitHub open-source repository
+- Windows setup script
+- one-click start script
+- system check script
+- quick start guide
+- model setup guide
 
-## 16. Roadmap
+Planned:
 
-```text
-V4.7 Streaming Live Mode
-- sentence-level streaming response
-- TTS queue
-- lower perceived latency
-
-V4.8 Web-Augmented RAG
-- web search
-- direct URL crawl
-- local knowledge ingestion
-
-V4.9 Tutor Modes
-- English Speaking Coach
+- English Speaking Coach Mode
 - Math Teacher Mode
-- scoring and feedback
-
-V5.0 Desktop Tutor Prototype
-- software stability layer
-- launcher
-- better documentation
-- open-source release
-```
+- Formula Display
+- Better Lite Mode
+- Desktop release packaging
 
 ---
 
-## 17. Academic Relevance
+## Privacy Design
 
-This project can support research in:
+LocalAI_V3 follows a local-first design:
 
-- edge AI
-- privacy-preserving AI
-- multimodal AI assistants
-- local RAG
-- speech-to-speech interaction
-- AI-assisted learning
-- personalised tutoring systems
+- user documents stay local
+- memory data stays local
+- voice samples stay local
+- generated RAG indexes stay local
+- models run on the user's own machine
 
-A suitable academic description:
-
-> LocalAI_V3 demonstrates how a privacy-preserving multimodal AI tutor can be built using local ASR, LLM inference, TTS, RAG, memory, image understanding, and web-augmented knowledge ingestion on consumer hardware.
+This makes the project suitable for exploring privacy-preserving AI learning assistants.
 
 ---
 
-## 18. Limitations
-
-Current limitations include:
-
-- requires NVIDIA GPU for best experience
-- model setup is manual
-- XTTS can be slow for long responses
-- web crawling is not reliable for all websites
-- Qwen-VL requires careful GPU memory management
-- full real-time interruption is not yet implemented
-- not designed for high-concurrency cloud deployment
-
----
-
-## 19. License
+## License
 
 This project is released under the MIT License.
 
-Model weights are not included and may have separate licenses.
+See:
+
+```text
+LICENSE
+```
 
 ---
 
-## 20. Disclaimer
+## Disclaimer
 
-This project is intended for educational, research, and personal learning use. Users are responsible for complying with model licenses, website terms of service, copyright rules, and local regulations.
+This project is an educational and research prototype. It is not a commercial medical, legal, or safety-critical system.
+
+Users are responsible for downloading models according to the relevant model licenses.
