@@ -70,3 +70,6 @@ requirements_*.txt
 
 # Accidental nested tools folder
 tools/tools/
+
+# Local README backups
+README_BACKUP_*.md
