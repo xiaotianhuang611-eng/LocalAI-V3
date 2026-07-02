@@ -10,7 +10,11 @@ venv/
 env/
 
 # Large model files
-models/
+models/*
+!models/.gitkeep
+!models/qwen_vl/
+models/qwen_vl/*
+!models/qwen_vl/.gitkeep
 *.gguf
 *.bin
 *.safetensors
